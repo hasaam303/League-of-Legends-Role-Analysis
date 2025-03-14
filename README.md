@@ -1,2 +1,2 @@
-# League-of-Legends-Jungler-Role-Analysis
+# League-of-Legends-Role-Analysis
 Project at UCSD
