@@ -73,6 +73,7 @@ These aggregates summarize gameplay metrics for each role, highlighting differen
 
 ![Aggregated Role Statistics](assets/screenshot-2025-03-14-233556.png)
 
+---
 
 # Assessment of Missingness
 
@@ -96,6 +97,8 @@ From performing the permutation test, we got a p-value of 0 meaning we reject th
 
 These aggregates summarize gameplay metrics for each role, highlighting differences in gold, experience, kills, assists, and damage dealt. Bot lane has the highest damage output and assists, reinforcing its role in team fights. Jungle shows high variance in kills, reflecting its impact variability. Support leads in assists but deals the least damage, aligning with its playstyle. Despite these differences, win rates remain balanced, suggesting fair matchmaking.
 
+---
+
 # Hypothesis Testing
 
 The purpose of this hypothesis test is to determine whether there is a significant difference in gold difference at 15 across the roles. I performed a two-tailed experiment utilizing Welch’s t-test at a 0.05 significance level.
@@ -105,11 +108,15 @@ The purpose of this hypothesis test is to determine whether there is a significa
 
 The results of the experiment concluded in extremely low p-values, close to 0, for all roles. Hence, we reject the null hypothesis. This means that the gold difference at 15 minutes is significantly different between winners and losers for every role. Since the t-statistics are all positive, winners generally have higher gold differences at 15 minutes compared to losers.
 
+---
+
 # Framing a Prediction Problem
 
 Our hypothesis testing concluded that gold difference plays a significant difference across all roles in the outcome of winning or losing a game. Our exploratory data analysis showed us that the statistics differ for each role. Since we saw that the bot role had the greatest amount of both gold at 10 minutes and damage dealt to enemy champions at 10 minutes, we can frame our prediction problem around the bot role.
 
 Our prediction problem will be to try to predict the outcome of a game based on the stats of the bot player. In order to do this, we need to construct a model that takes in early-game statistics such as gold difference at 15 minutes (golddiffat15) and XP difference at 15 minutes (xpdiffat15) as input features and outputs whether the bot player’s team will win or lose the game.
+
+---
 
 # Baseline Model
 
@@ -125,6 +132,8 @@ The logistic regression model achieved an accuracy of 67.8%, indicating moderate
 
 While the model provides a reasonable baseline, its accuracy and F1-scores indicate that it is not highly reliable. The results suggest that gold and XP differences at 15 minutes are useful indicators of match outcomes, but they are likely not the only determining factors.
 
+---
+
 # Final Model
 
 ### Feature Engineering & Selection
@@ -135,6 +144,8 @@ In refining our model, we explored different feature combinations to improve pre
 
 The logistic regression model, which served as our baseline, achieved an accuracy of 67.8% and a weighted F1-score of 0.678. In contrast, the final random forest classifier achieved an accuracy of 80.8% and a weighted F1-score of 0.808.
 
+---
+
 # Fairness Analysis
 
 For our hypothesis test, we define Group X as players who had a gold advantage at 15 minutes (gold_advantaged) and Group Y as players who were at a gold disadvantage at 15 minutes (gold_disadvantaged). The goal of this test is to determine whether having a gold advantage at 15 minutes leads to significantly better model performance when predicting match outcomes.
@@ -143,3 +154,5 @@ For our hypothesis test, we define Group X as players who had a gold advantage a
 **Alternative Hypothesis:** There is a significant difference in model performance between gold-advantaged and gold-disadvantaged players.
 
 Both p-values for the permutation test were 0.024 for precision and 0.019 for F1-score, which are below the threshold of 0.05. Therefore, we reject the null hypothesis. This result confirms that having a gold advantage at 15 minutes is associated with significantly better model performance in predicting match outcomes. These findings suggest that early-game economic advantages translate into more predictable game results, reinforcing the importance of gold leads in competitive League of Legends play.
+
+---
