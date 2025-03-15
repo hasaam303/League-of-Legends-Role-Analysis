@@ -4,7 +4,7 @@ description: "Analyzing the impact of roles in League of Legends esports matches
 baseurl: ""
 url: "https://hassam303.github.io/League-of-Legends-Role-Analysis"
 
-remote_theme: jekyll/minima
+remote_theme: minima
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
