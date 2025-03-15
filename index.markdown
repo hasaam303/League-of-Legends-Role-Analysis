@@ -85,7 +85,7 @@ Among our relevant columns, there were no columns that were Not Missing at Rando
 
 From performing the permutation test, we got a p-value of 0.29 meaning we fail to reject the null hypothesis, concluding that goldat10 is not dependent on damagetochampions.
 
-### Now let's perform the permutation test with the URL column:
+Now let's perform the permutation test with the URL column:
 
 **Null Hypothesis:** The missingness of goldat10 is independent of the URL.  
 **Alternative Hypothesis:** The missingness of goldat10 is dependent on the URL.
@@ -113,25 +113,25 @@ Our prediction problem will be to try to predict the outcome of a game based on 
 
 # Baseline Model
 
-## Model Description
+### Model Description
 
 The model used in this analysis is a logistic regression classifier, which is a linear model designed for binary classification tasks. In this case, it predicts whether the bot lane player's team will win or lose based on early-game statistics.
 
-## Model Performance
+### Model Performance
 
 The logistic regression model achieved an accuracy of 67.8%, indicating moderate predictive capability. The F1-scores for each class were 0.684 (loss) and 0.671 (win), with a weighted average of 0.678.
 
-## Evaluation
+### Evaluation
 
 While the model provides a reasonable baseline, its accuracy and F1-scores indicate that it is not highly reliable. The results suggest that gold and XP differences at 15 minutes are useful indicators of match outcomes, but they are likely not the only determining factors.
 
 # Final Model
 
-## Feature Engineering & Selection
+### Feature Engineering & Selection
 
 In refining our model, we explored different feature combinations to improve predictive performance. One key feature we added was kill participation (kill_participation), which is an engineered feature. Kill participation measures the proportion of team kills a player is involved in and serves as a strong indicator of player impact on the game.
 
-## Model Performance Comparison
+### Model Performance Comparison
 
 The logistic regression model, which served as our baseline, achieved an accuracy of 67.8% and a weighted F1-score of 0.678. In contrast, the final random forest classifier achieved an accuracy of 80.8% and a weighted F1-score of 0.808.
 
