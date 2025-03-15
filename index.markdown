@@ -44,45 +44,102 @@ The dataset contains 19,068 rows and 161 columns featuring various statistical o
 
 ---
 
-## Data Cleaning and Exploratory Data Analysis
+# Data Cleaning and Exploratory Data Analysis
 
-### Data Cleaning
+## Data Cleaning
 
-For simplicity, let's only keep the relevant columns introduced in the introduction. Each game completes **12 rows** in the dataset—**5 for each member of each team**, and the remaining **2** containing gameplay metrics of each team, different from individual players. For future analysis, I will mainly include **player rows only**, since many of the team rows are sums of the player roles, so they would just be repeated information. This **cleaned dataframe** will be used in our hypothesis testing and prediction model.
+For simplicity let's only keep the relevant columns introduced in the introduction. Each game completes 12 given rows in the dataset, 5 for each member of each team, and the remaining 2 containing gameplay metrics of each team different from individual players. For future analysis I will mainly include player rows only since many of the team rows are sums of the player roles so they would just be repeated information. This dataframe is what will be used in our hypothesis testing and prediction model.
 
-While the dataset included columns such as `goldat10`, `xpat10` for each feature up to **25 minutes** into the game, I chose to analyze data at the **15-minute mark** because the **average game length** was approximately **19 minutes and 39 seconds (19:39)**. Using multiple timestamps would introduce **redundancy**, and analyzing metrics at later points—such as **20 or 25 minutes**—would not be meaningful, given that many matches **end before reaching those times**.
+While the dataset included columns such as goldat10, xpat10 for each feature all the way until 25 minutes into the game, I chose to analyze the data at the 15-minute mark because the average game length was approximately 19 minutes and 39 seconds (19:39). Using multiple timestamps would introduce redundancy, and analyzing metrics at later points, such as 20 or 25 minutes, would not be meaningful, given that many matches end before reaching those times.
 
-Below is the head of the dataframe `df_cleaned`.
+Below is the head of the dataframe df_cleaned.
 
----
+![Raw Dataset Sample](screenshot-2025-03-14-233605.png)
 
-## Univariate Analysis
+## Univariate and Bivariate Analysis
 
-Here are some **univariate analyses** on features within the dataset:
+This horizontal histogram shows the sum of gold at 15 minutes per role. We can see that bot has the most by just a little bit while support has much less than the rest. This makes sense and introduces bias against the support role because strategies, especially by professional players, do not funnel gold into support players.
 
-### Gold at 15 Minutes
-<iframe
-  src="assets/goldat10_histogram.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
-  *Description*
+![Gold at 15 Minutes by Role](assets/screenshot-2025-03-14-222802.png)
 
-- [`damage_barchart.html`](damage_barchart.html)  
-  *Description*
+This bivariate analysis on gold difference at 15 minutes and results visualizes the difference between how much gold the winning team has vs how much gold the losing team has. From this, we can see that winning teams do have more gold and the gold difference between bot is the most significant.
 
----
+![Gold Difference at 15 Minutes by Role (Winners vs Losers)](assets/screenshot-2025-03-14-222749.png)
 
-## Bivariate Analysis
+## Interesting Aggregates
 
-Here are some **bivariate analyses** on features within the dataset.
+These aggregates summarize gameplay metrics for each role, highlighting differences in gold, experience, kills, assists, and damage dealt. Bot lane has the highest damage output and assists, reinforcing its role in team fights. Jungle shows high variance in kills, reflecting its impact variability. Support leads in assists but deals the least damage, aligning with its playstyle. Despite these differences, win rates remain balanced, suggesting fair matchmaking.
 
-I performed **bivariate analysis** on the **gold difference of winners and losers**:
 
-- [`golddiff_outcome_boxplot.html`](golddiff_outcome_boxplot.html)  
-  *Description*
+![Aggregated Role Statistics](assets/screenshot-2025-03-14-233556.png)
 
----
 
-## Hypothesis Testin
+# Assessment of Missingness
+
+Among our relevant columns, there were no columns that were Not Missing at Random (NMAR). Only a few of our key features contained missing values, including goldat10, xpat10, etc. I performed a permutation test to see if the missingness of the column goldat10 depended on any of the other columns. One column which I believed the missingness depended on was the URL and a column whose missingness did not depend on was damagetochampions. I chose a 0.05 significance level using the difference of means as the test statistic.
+
+### Lets begin with the damagetochampions:
+
+**Null Hypothesis:** The missingness of goldat10 is independent of damagetochampions.  
+**Alternative Hypothesis:** The missingness of goldat10 is dependent on damagetochampions.
+
+From performing the permutation test, we got a p-value of 0.29 meaning we fail to reject the null hypothesis, concluding that goldat10 is not dependent on damagetochampions.
+
+### Now let's perform the permutation test with the URL column:
+
+**Null Hypothesis:** The missingness of goldat10 is independent of the URL.  
+**Alternative Hypothesis:** The missingness of goldat10 is dependent on the URL.
+
+From performing the permutation test, we got a p-value of 0 meaning we reject the null hypothesis. This means that the column goldat10 was entirely dependent on whether the URL was present or not. This is likely because the URL contains stats on the game, hence the creators of the dataset thought it would be unnecessary to include it again.
+
+# Interesting Aggregates
+
+These aggregates summarize gameplay metrics for each role, highlighting differences in gold, experience, kills, assists, and damage dealt. Bot lane has the highest damage output and assists, reinforcing its role in team fights. Jungle shows high variance in kills, reflecting its impact variability. Support leads in assists but deals the least damage, aligning with its playstyle. Despite these differences, win rates remain balanced, suggesting fair matchmaking.
+
+# Hypothesis Testing
+
+The purpose of this hypothesis test is to determine whether there is a significant difference in gold difference at 15 across the roles. I performed a two-tailed experiment utilizing Welch’s t-test at a 0.05 significance level.
+
+**Null Hypothesis:** There is no significant difference in gold difference at 15 minutes between winners and losers for a given role. Any observed difference is due to random chance.  
+**Alternative Hypothesis:** There is a significant difference in gold difference at 15 minutes between winners and losers for at least one role.
+
+The results of the experiment concluded in extremely low p-values, close to 0, for all roles. Hence, we reject the null hypothesis. This means that the gold difference at 15 minutes is significantly different between winners and losers for every role. Since the t-statistics are all positive, winners generally have higher gold differences at 15 minutes compared to losers.
+
+# Framing a Prediction Problem
+
+Our hypothesis testing concluded that gold difference plays a significant difference across all roles in the outcome of winning or losing a game. Our exploratory data analysis showed us that the statistics differ for each role. Since we saw that the bot role had the greatest amount of both gold at 10 minutes and damage dealt to enemy champions at 10 minutes, we can frame our prediction problem around the bot role.
+
+Our prediction problem will be to try to predict the outcome of a game based on the stats of the bot player. In order to do this, we need to construct a model that takes in early-game statistics such as gold difference at 15 minutes (golddiffat15) and XP difference at 15 minutes (xpdiffat15) as input features and outputs whether the bot player’s team will win or lose the game.
+
+# Baseline Model
+
+## Model Description
+
+The model used in this analysis is a logistic regression classifier, which is a linear model designed for binary classification tasks. In this case, it predicts whether the bot lane player's team will win or lose based on early-game statistics.
+
+## Model Performance
+
+The logistic regression model achieved an accuracy of 67.8%, indicating moderate predictive capability. The F1-scores for each class were 0.684 (loss) and 0.671 (win), with a weighted average of 0.678.
+
+## Evaluation
+
+While the model provides a reasonable baseline, its accuracy and F1-scores indicate that it is not highly reliable. The results suggest that gold and XP differences at 15 minutes are useful indicators of match outcomes, but they are likely not the only determining factors.
+
+# Final Model
+
+## Feature Engineering & Selection
+
+In refining our model, we explored different feature combinations to improve predictive performance. One key feature we added was kill participation (kill_participation), which is an engineered feature. Kill participation measures the proportion of team kills a player is involved in and serves as a strong indicator of player impact on the game.
+
+## Model Performance Comparison
+
+The logistic regression model, which served as our baseline, achieved an accuracy of 67.8% and a weighted F1-score of 0.678. In contrast, the final random forest classifier achieved an accuracy of 80.8% and a weighted F1-score of 0.808.
+
+# Fairness Analysis
+
+For our hypothesis test, we define Group X as players who had a gold advantage at 15 minutes (gold_advantaged) and Group Y as players who were at a gold disadvantage at 15 minutes (gold_disadvantaged). The goal of this test is to determine whether having a gold advantage at 15 minutes leads to significantly better model performance when predicting match outcomes.
+
+**Null Hypothesis:** There is no significant difference in model performance between gold-advantaged and gold-disadvantaged players.  
+**Alternative Hypothesis:** There is a significant difference in model performance between gold-advantaged and gold-disadvantaged players.
+
+Both p-values for the permutation test were 0.024 for precision and 0.019 for F1-score, which are below the threshold of 0.05. Therefore, we reject the null hypothesis. This result confirms that having a gold advantage at 15 minutes is associated with significantly better model performance in predicting match outcomes. These findings suggest that early-game economic advantages translate into more predictable game results, reinforcing the importance of gold leads in competitive League of Legends play.
