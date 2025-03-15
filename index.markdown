@@ -45,3 +45,38 @@ The dataset contains 19,068 rows and 161 columns featuring various statistical o
 ---
 
 ## Data Cleaning and Exploratory Data Analysis
+
+### Data Cleaning
+
+For simplicity, let's only keep the relevant columns introduced in the introduction. Each game completes **12 rows** in the dataset—**5 for each member of each team**, and the remaining **2** containing gameplay metrics of each team, different from individual players. For future analysis, I will mainly include **player rows only**, since many of the team rows are sums of the player roles, so they would just be repeated information. This **cleaned dataframe** will be used in our hypothesis testing and prediction model.
+
+While the dataset included columns such as `goldat10`, `xpat10` for each feature up to **25 minutes** into the game, I chose to analyze data at the **15-minute mark** because the **average game length** was approximately **19 minutes and 39 seconds (19:39)**. Using multiple timestamps would introduce **redundancy**, and analyzing metrics at later points—such as **20 or 25 minutes**—would not be meaningful, given that many matches **end before reaching those times**.
+
+Below is the head of the dataframe `df_cleaned`.
+
+---
+
+## Univariate Analysis
+
+Here are some **univariate analyses** on features within the dataset:
+
+- [`goldat15_histogram.html`](goldat15_histogram.html)  
+  *Description*
+
+- [`damage_barchart.html`](damage_barchart.html)  
+  *Description*
+
+---
+
+## Bivariate Analysis
+
+Here are some **bivariate analyses** on features within the dataset.
+
+I performed **bivariate analysis** on the **gold difference of winners and losers**:
+
+- [`golddiff_outcome_boxplot.html`](golddiff_outcome_boxplot.html)  
+  *Description*
+
+---
+
+## Hypothesis Testin
