@@ -61,7 +61,7 @@ Below is the head of the dataframe `df_cleaned`.
 Here are some **univariate analyses** on features within the dataset:
 
 ### Gold at 15 Minutes
-<iframe src="goldat15_histogram.html" width="100%" height="500px"></iframe>
+[Gold at 15 Minutes Histogram](assets/graphs/goldat15_histogram.html)
   *Description*
 
 - [`damage_barchart.html`](damage_barchart.html)  
