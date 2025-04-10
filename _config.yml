@@ -1,6 +1,0 @@
-remote_theme: jekyll/minima
-plugins:
-  - jekyll-remote-theme
-
-baseurl: "/League-of-Legends-Role-Analysis"
-url: "https://hasaam303.github.io"
